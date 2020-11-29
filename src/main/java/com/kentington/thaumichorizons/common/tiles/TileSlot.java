@@ -193,7 +193,7 @@ public class TileSlot extends TileThaumcraft
             }
         }
     }
-    
+
     boolean checkPortalX() {
         for (int x = -1; x <= 1; ++x) {
             for (int y = -1; y >= -3; --y) {
@@ -202,7 +202,8 @@ public class TileSlot extends TileThaumcraft
                 }
             }
         }
-        return this.worldObj.getBlock(this.xCoord - 2, this.yCoord, this.zCoord) == Blocks.lapis_block && this.worldObj.getBlock(this.xCoord + 2, this.yCoord, this.zCoord) == Blocks.lapis_block && this.worldObj.getBlock(this.xCoord - 2, this.yCoord - 4, this.zCoord) == Blocks.lapis_block && this.worldObj.getBlock(this.xCoord + 2, this.yCoord - 4, this.zCoord) == Blocks.lapis_block && this.isArcStone(this.xCoord - 1, this.yCoord, this.zCoord) && this.isArcStone(this.xCoord + 1, this.yCoord, this.zCoord) && this.isArcStone(this.xCoord - 2, this.yCoord - 1, this.zCoord) && this.isArcStone(this.xCoord - 2, this.yCoord - 2, this.zCoord) && this.isArcStone(this.xCoord - 2, this.yCoord - 3, this.zCoord) && this.isArcStone(this.xCoord + 2, this.yCoord - 1, this.zCoord) && this.isArcStone(this.xCoord + 2, this.yCoord - 2, this.zCoord) && this.isArcStone(this.xCoord + 2, this.yCoord - 3, this.zCoord) && this.isArcStone(this.xCoord - 1, this.yCoord - 4, this.zCoord) && this.isArcStone(this.xCoord, this.yCoord - 4, this.zCoord) && this.isArcStone(this.xCoord + 1, this.yCoord - 4, this.zCoord);
+
+        return checkPortal(this.xCoord, this.yCoord, this.zCoord);
     }
     
     boolean checkPortalZ() {
@@ -213,11 +214,39 @@ public class TileSlot extends TileThaumcraft
                 }
             }
         }
-        return this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord - 2) == Blocks.lapis_block && this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord + 2) == Blocks.lapis_block && this.worldObj.getBlock(this.xCoord, this.yCoord - 4, this.zCoord - 2) == Blocks.lapis_block && this.worldObj.getBlock(this.xCoord, this.yCoord - 4, this.zCoord + 2) == Blocks.lapis_block && this.isArcStone(this.xCoord, this.yCoord, this.zCoord - 1) && this.isArcStone(this.xCoord, this.yCoord, this.zCoord + 1) && this.isArcStone(this.xCoord, this.yCoord - 1, this.zCoord - 2) && this.isArcStone(this.xCoord, this.yCoord - 2, this.zCoord - 2) && this.isArcStone(this.xCoord, this.yCoord - 3, this.zCoord - 2) && this.isArcStone(this.xCoord, this.yCoord - 1, this.zCoord + 2) && this.isArcStone(this.xCoord, this.yCoord - 2, this.zCoord + 2) && this.isArcStone(this.xCoord, this.yCoord - 3, this.zCoord + 2) && this.isArcStone(this.xCoord, this.yCoord - 4, this.zCoord - 1) && this.isArcStone(this.xCoord, this.yCoord - 4, this.zCoord) && this.isArcStone(this.xCoord, this.yCoord - 4, this.zCoord + 1);
+
+        return checkPortal(this.zCoord, this.yCoord, this.xCoord);
+   }
+
+    boolean checkPortal(int sideways, int y, int backwards) {
+        boolean isValid = true;
+
+        isValid &= checkCornerBlock(sideways - 2, y, backwards);
+        isValid &= checkCornerBlock(sideways + 2, y, backwards);
+        isValid &= checkCornerBlock(sideways - 2, y - 4, backwards);
+        isValid &= checkCornerBlock(sideways + 2, y - 4, backwards);
+
+        isValid &= checkEdgeBlock(sideways - 1, y, backwards);
+        isValid &= checkEdgeBlock(sideways + 1, y, backwards);
+        isValid &= checkEdgeBlock(sideways - 2, y - 1, backwards);
+        isValid &= checkEdgeBlock(sideways + 2, y - 1, backwards);
+        isValid &= checkEdgeBlock(sideways - 2, y - 2, backwards);
+        isValid &= checkEdgeBlock(sideways + 2, y - 2, backwards);
+        isValid &= checkEdgeBlock(sideways - 2, y - 3, backwards);
+        isValid &= checkEdgeBlock(sideways + 2, y - 3, backwards);
+        isValid &= checkEdgeBlock(sideways - 1, y - 4, backwards);
+        isValid &= checkEdgeBlock(sideways, y - 4, backwards);
+        isValid &= checkEdgeBlock(sideways + 1, y - 4, backwards);
+
+        return isValid;
     }
-    
-    boolean isArcStone(final int x, final int y, final int z) {
-        return this.worldObj.getBlock(x, y, z) == ConfigBlocks.blockCosmeticSolid && this.worldObj.getBlockMetadata(x, y, z) == 6;
+
+    boolean checkCornerBlock(final int x, final int y, final int z) {
+        return this.worldObj.getBlock(x, y, z) == ConfigBlocks.blockMetalDevice && this.worldObj.getBlockMetadata(x, y, z) == 3;
+    }
+
+    boolean checkEdgeBlock(final int x, final int y, final int z) {
+        return this.worldObj.getBlock(x, y, z) == ConfigBlocks.blockCosmeticSolid && this.worldObj.getBlockMetadata(x, y, z) == 11;
     }
     
     public void insertKeystone(final int pocketNum) {
